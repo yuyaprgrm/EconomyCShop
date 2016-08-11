@@ -1,0 +1,40 @@
+0.0.1 -  8-03  8:48 EconomyCShop作成開始
+0.0.2 -        8:49 0.0.1でのエラーを修正
+0.0.3 -        8:52 0.0.2でのエラーを修正,ファイル構成の見直し
+0.1.0 -       10:05 EventListenerの追加
+0.1.1 -       10:41 EventListenerの起動をお知らせするように変更
+0.1.2 -       10:42 DatabaseManagerの追加
+0.1.3 -       10:50 DatabaseManagerのバグの修正
+0.1.4 -  8-06 20:34 DatabaseManagerとEconomyCShopの更新
+0.2.0 -  8-08 14:36 DatabaseManager, メソッドの追加
+0.2.1 -  8-09 13:15 EventListenerへのイベント追加
+0.2.2 -       13:17 EconomyCShopの修正
+0.2.3 -       13:18 EventListenerの修正
+0.2.4 -       13:20 EventListenerの修正
+0.2.4.1       13:22 デバッグバージョンの作成
+0.2.5 -       13:25 EventListenerの修正
+0.2.6 -       13:26 EventListenerの修正
+0.3.0 -       15:14 Chestの取得方法の追加
+0.3.1 -       15:56 EconomyCShopの作成方法の追加
+0.3.2 -       16:06 EconomyCShopの修正
+0.3.3 -       16:09 EventListenerの修正
+0.3.4 -       17:03 EventListenerの修正
+0.3.5 -       17:12 EventListenerの修正
+0.3.6 -       17:15 DatabaseManagerの修正
+0.3.7 -       17:17 DatabaseManagerの修正
+0.3.8 -       17:19 DatabaseManagerの修正
+0.3.9 -       17:23 DatabaseManagerの修正
+0.4.0 -       17:XX ChestShopSystemの実装開始
+0.4.0.1       20:45 デバッグバージョンの作成
+0.4.1 -  8-10  9:20 ChestShopSystem_v0.1-アイテムの確認
+0.4.2 -        9:33 バグの修正
+0.4.3 -        9:34 バグの修正
+0.4.4 -        9:39 バグの修正
+0.4.5 -        9:41 バグの修正
+0.4.6 -        9:53 バグの修正
+0.5.0 -       12:28 ChestShopSystem_v0.2-アイテム購入の手続きの追加
+0.5.1 -       14:00 ChestShopSystem_v0.3-閉店!
+0.5.2 -       18:44 EconomyAPIとの連帯
+0.5.3 -       20:15 Item購入の実装完了
+0.5.3.1       20:16 デバッグバージョンの作成
+0.5.4 -       20:44 おそらく完成版
