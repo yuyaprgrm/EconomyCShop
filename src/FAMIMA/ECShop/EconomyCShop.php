@@ -20,7 +20,7 @@ class EconomyCShop extends PluginBase
 		$plugin = "EconomyCShop";
 		$logger = $this->getLogger();
 		$logger->info(TF::GREEN.$plugin."を起動しました");
-		$logger->info(TF::AQUA.$plugin."はオープンソースなプラグインです");
+		$logger->info(TF::AQUA.$plugin."は再配布, 二次配布を許可していません By famimaS65536");
 		$this->server = $this->getServer();
 		new EventListener($this);
 		$dir = $this->getDataFolder();
