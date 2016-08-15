@@ -5,7 +5,7 @@ namespace FAMIMA\ECShop;
 use pocketmine\event\Listener;
 use pocketmine\event\block\{SignChangeEvent, BlockBreakEvent};
 use pocketmine\event\player\PlayerInteractEvent;
-
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\utils\TextFormat as TF;
 use pocketmine\item\Item;
 use pocketmine\level\Position;
@@ -17,12 +17,23 @@ use FAMIMA\ECShop\EconomyCShop;
 class EventListener implements Listener
 {
 	private $ecshop;
+	private $playerxyz;
+
 	const ECS = TF::WHITE."[".TF::GREEN."ECS".TF::WHITE."]";
 
 	public function __construct(EconomyCShop $plugin)
 	{
 		$this->ecshop = $plugin;
 		$plugin->server->getPluginManager()->registerEvents($this, $plugin);
+		foreach($plugin->server->getOnlinePlayers() as $p)
+		{
+			$this->playerxyz[$p->getName()] = "0.0.0";
+		}
+	}
+
+	public function onJoin(PlayerJoinEvent $e)
+	{
+		$this->playerxyz[$e->getPlayer()->getName()] = "0.0.0";
 	}
 
 	public function SignChange(SignChangeEvent $e)
@@ -45,16 +56,14 @@ class EventListener implements Listener
 				if($this->ecshop->isExistsChests($pos = $b))
 				{
 					$this->ecshop->createChestShop($this->ecshop->getChests($pos), $pos, $p->getName(), $item, $lines[1]);
-					$p->sendMessage(self::ECS.TF::GREEN."EconomyCShopの作成が完了しました");
+					$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message1"));
 					$e->setLine(0, $p->getName());
 					$e->setLine(1, "price:".$lines[1]);
 					$e->setLine(2, "amount:".$lines[2]);
 					$e->setLine(3, $item->getName());
 				}else{
-					$p->sendMessage(self::ECS.TF::RED."Chestが見つかりません!,横にChestがあるか確認してください");
+					$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message2"));
 				}
-			}else{
-				$p->sendMessage(self::ECS.TF::RED."すべての項目を書き込んでください");
 			}
 		}
 	}
@@ -71,26 +80,32 @@ class EventListener implements Listener
 			//var_dump($e->getAction());
 			if($n === $shopdata["owner"])
 			{
-				if($e->getAction() === 1)$p->sendMessage(self::ECS.TF::RED."これはあなたのSHOPです");
+				if($e->getAction() === 1)$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message3"));
 			}else{
 				$chestpos = new Position($shopdata["cx"], $shopdata["cy"], $shopdata["cz"], $this->ecshop->server->getLevelByName($shopdata["levelname"]));
 				if($this->ecshop->isExistChestInItem($chestpos, $item = Item::get($shopdata["itemid"], $shopdata["itemmeta"], $shopdata["itemamount"])))
 				{
-					if($this->ecshop->onBuy($shopdata["owner"], $n, $shopdata["price"]))
+					if(($inv = $p->getInventory())->canAddItem($item))
 					{
-						if(($inv = $p->getInventory())->canAddItem($item))
+						if($this->playerxyz[$n] === $b->x.".".$b->y.".".$b->z)
 						{
-							$this->ecshop->removeChestInItem($chestpos, $item);
+							if($this->ecshop->onBuy($shopdata["owner"], $n, $shopdata["price"]))
+							{
+								$this->ecshop->removeChestInItem($chestpos, $item);
 							$inv->addItem($item);
-							$p->sendMessage(self::ECS.TF::GOLD.$item->getName().TF::GREEN."を".TF::AQUA.$item->getCount()."個".TF::GREEN."購入しました");
+							$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message8", ["%item" => $item->getName(), "%amount" => $item->getCount()]));
+							}else{
+								$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message6"));
+							}
 						}else{
-							$p->sendMessage(self::ECS.TF::RED."インベントリにアイテムが追加できません");
+							$this->playerxyz[$n] = $b->x.".".$b->y.".".$b->z;
+							$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message9", ["%item" => $item->getName(), "%price" => $shopdata["price"]]));
 						}
 					}else{
-						$p->sendMessage(self::ECS.TF::RED."お金が足りないため購入できませんでした");
+						$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message4"));
 					}
 				}else{
-					$p->sendMessage(self::ECS.TF::RED."Chestにアイテムがありません, 補充してもらいましょう(´・ω・｀)");
+					$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message5"));
 				}
 			}
 		}else if($this->ecshop->isShopChestExists($b))
@@ -100,7 +115,7 @@ class EventListener implements Listener
 				if($this->ecshop->getShopData($b)["owner"] !== $n)
 				{
 					$e->setCancelled();
-					$p->sendMessage(self::ECS.TF::RED."あなたはこのchestを開けることができません!");
+					$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message7"));
 				}
 			}
 		}
@@ -115,10 +130,10 @@ class EventListener implements Listener
 		{
 			if(($sdata = $this->ecshop->getShopData($b))["owner"] !== $n)
 			{
-				$p->sendMessage(self::ECS.TF::RED."あなたはこのShopを破壊することができません");
+				$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message10"));
 				$e->setCancelled();
 			}else{
-				$p->sendMessage(self::ECS.TF::RED."Shopを閉店しました");
+				$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message12"));
 				$this->ecshop->removeShop(new Position($sdata["sx"], $sdata["sy"], $sdata["sz"], $this->ecshop->server->getLevelByName($sdata["levelname"])));
 			}
 		}
@@ -126,10 +141,10 @@ class EventListener implements Listener
 		{
 			if(($sdata = $this->ecshop->getShopData($b))["owner"] !== $n)
 			{
-				$p->sendMessage(self::ECS.TF::RED."あなたはこのChestを破壊することができません");
+				$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message11"));
 				$e->setCancelled();
 			}else{
-				$p->sendMessage(self::ECS.TF::RED."Shopを閉店しました");
+				$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message12"));
 				$this->ecshop->removeShop(new Position($sdata["sx"], $sdata["sy"], $sdata["sz"], $this->ecshop->server->getLevelByName($sdata["levelname"])));
 			}
 		}
