@@ -41,15 +41,10 @@ class DatabaseManager
 		$sql->bindValue(':x', $x, SQLITE3_INTEGER);
 		$sql->bindValue(':y', $y, SQLITE3_INTEGER);
 		$sql->bindValue(':z', $z, SQLITE3_INTEGER);
-		$sql->bindValue(':levelname', "$levelname", SQLITE3_TEXT);
+		$sql->bindValue(':levelname', $levelname, SQLITE3_TEXT);
 		$result = $sql->execute();
-		$a = [];
-		while($r = $result->fetchArray())
-		{
-			$a = $r;
-		}
 
-		return count($a) > 0;
+		return $result->fetchArray() !== false;
 	}
 
 	public function isShopChestExists($x, $y, $z, $levelname)
@@ -58,44 +53,24 @@ class DatabaseManager
 		$sql->bindValue(':x', $x, SQLITE3_INTEGER);
 		$sql->bindValue(':y', $y, SQLITE3_INTEGER);
 		$sql->bindValue(':z', $z, SQLITE3_INTEGER);
-		$sql->bindValue(':levelname', "$levelname", SQLITE3_TEXT);
+		$sql->bindValue(':levelname', $levelname, SQLITE3_TEXT);
 		$result = $sql->execute();
-		$b = [];
-		while($r = $result->fetchArray())
-		{
-			$b = $r;
-		}
-		return count($b) > 0;
+
+		return $result->fetchArray() !== false;
 	}
 
 	public function getShopData($x, $y, $z, $levelname)
 	{
-		$sql = $this->db->prepare("SELECT * from shop WHERE sx = :x and sy = :y and sz = :z and levelname = :levelname");
+		$sql = $this->db->prepare("SELECT * from shop WHERE ( (sx = :x and sy = :y and sz = :z) or (cx = :x and cy = :y and cz = :z) ) and levelname = :levelname");
 		$sql->bindValue(':x', $x, SQLITE3_INTEGER);
 		$sql->bindValue(':y', $y, SQLITE3_INTEGER);
 		$sql->bindValue(':z', $z, SQLITE3_INTEGER);
-		$sql->bindValue(':levelname', "$levelname", SQLITE3_TEXT);
+		$sql->bindValue(':levelname', $levelname, SQLITE3_TEXT);
 		$result = $sql->execute();
-		$a = [];
-		while($r = $result->fetchArray())
-		{
-			$a = $r;
-		}
-		if(count($a) <= 0)
-		{
-			$sql = $this->db->prepare("SELECT * from shop WHERE cx = :x and cy = :y and cz = :z and levelname = :levelname");
-			$sql->bindValue(':x', $x, SQLITE3_INTEGER);
-			$sql->bindValue(':y', $y, SQLITE3_INTEGER);
-			$sql->bindValue(':z', $z, SQLITE3_INTEGER);
-			$sql->bindValue(':levelname', "$levelname", SQLITE3_TEXT);
-			$result = $sql->execute();
-			$a = [];
-			while($r = $result->fetchArray())
-			{
-				$a = $r;
-			}
-		}
-		return $a;
+
+		$shop = $result->fetchArray();
+		return $shop !== false ? $shop : null;
+
 	}
 
 	public function deleteShop($x, $y, $z, $worldname)

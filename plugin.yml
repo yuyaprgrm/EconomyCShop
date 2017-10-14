@@ -1,5 +1,5 @@
 name: EconomyCShop
 main: FAMIMA\ECShop\EconomyCShop
 author: FAMIMA
-version: 0.5.4
-api: [1.0.0, 2.0.0]
+version: 0.6.1
+api: [3.0.0-ALPHA7, 3.0.0-ALPHA8, 3.0.0-ALPHA9]
