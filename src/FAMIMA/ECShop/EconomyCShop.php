@@ -21,7 +21,7 @@ class EconomyCShop extends PluginBase
 		$plugin = "EconomyCShop";
 		$logger = $this->getLogger();
 		$logger->info(TF::GREEN.$plugin."を起動しました");
-		$logger->info(TF::AQUA.$plugin."再配布, 二次配布は禁止です. ゲーム内のメッセージはConfigから変更できます");
+		// $logger->info(TF::AQUA.$plugin."再配布, 二次配布は禁止です. ゲーム内のメッセージはConfigから変更できます");
 		$this->server = $this->getServer();
 		new EventListener($this);
 		$dir = $this->getDataFolder();
