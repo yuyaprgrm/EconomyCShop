@@ -84,7 +84,7 @@ class EventListener implements Listener
 			$shopdata = $this->ecshop->getShopData($b);
 			//var_dump($shopdata);
 			//var_dump($e->getAction());
-			if(!$n === $shopdata["owner"])
+			if($n === $shopdata["owner"])
 			{
 				if($e->getAction() === 1)$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message3"));
 			}else{
