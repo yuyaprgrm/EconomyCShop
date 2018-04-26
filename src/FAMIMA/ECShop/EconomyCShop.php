@@ -36,7 +36,7 @@ class EconomyCShop extends PluginBase
 			$this->server->getPluginManager()->disablePlugin($this);
 		}
 
-		$config = new Config($dir."Message.yml", Config::YAML, 
+		$config = new Config($dir."Message.yml", Config::YAML,
 			[
 			"Message1" => TF::GREEN."EconomyCShopの作成が完了しました",
 			"Message2" => TF::RED."Chestが見つかりません!,横にChestがあるか確認してください",
@@ -73,6 +73,11 @@ class EconomyCShop extends PluginBase
 	{
 		$this->db->createChestShop($cpos->x, $cpos->y, $cpos->z, $spos->x, $spos->y, $spos->z,
 		$owner, $item->getID(), $item->getDamage(), $item->getCount(), $price, $spos->getLevel()->getName());
+	}
+
+	public function updateChestShopData($spos, $owner, $item, $price)
+	{
+		$this->db->updateChestShopData($spos->x, $spos->y, $spos->z, $owner, $item->getID(), $item->getDamage(), $item->getCount(), $price, $spos->getLevel()->getName());
 	}
 
 	public function isShopExists($pos)

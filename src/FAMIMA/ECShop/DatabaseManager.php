@@ -35,6 +35,11 @@ class DatabaseManager
 			VALUES(\"$owner\", $cx, $cy, $cz, $sx, $sy, $sz, $itemid, $itemmeta, $itemamount, $price, \"$worldname\")");
 	}
 
+	public function updateChestShopData($sx, $sy, $sz, $owner, $itemid, $itemmeta, $itemamount, $price, $worldname)
+	{
+		$this->db->exec("UPDATE shop SET owner = \"$owner\", itemid = $itemid, itemmeta = $itemmeta, itemamount = $itemamount, price = $price WHERE sx = $sx and sy = $sy and sz = $sz and levelname = \"$worldname\"");
+	}
+
 	public function isShopExists($x, $y, $z, $levelname)
 	{
 		$sql = $this->db->prepare("SELECT * from shop WHERE sx = :x and sy = :y and sz = :z and levelname = :levelname");
