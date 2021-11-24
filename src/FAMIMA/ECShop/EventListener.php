@@ -55,12 +55,18 @@ class EventListener implements Listener
 				$b = $e->getBlock();
 				if($this->ecshop->isExistsChests($pos = $b))
 				{
-					$this->ecshop->createChestShop($this->ecshop->getChests($pos), $pos, $p->getName(), $item, $lines[1]);
-					$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message1"));
 					$e->setLine(0, $p->getName());
 					$e->setLine(1, "price:".$lines[1]);
 					$e->setLine(2, "amount:".$lines[2]);
 					$e->setLine(3, $item->getName());
+
+					if ($this->ecshop->isShopExists($pos))
+					{
+						$this->ecshop->updateChestShopData($pos, $p->getName(), $item, $lines[1]);
+					}else{
+						$this->ecshop->createChestShop($this->ecshop->getChests($pos), $pos, $p->getName(), $item, $lines[1]);
+						$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message1"));
+					}
 				}else{
 					$p->sendMessage(self::ECS.$this->ecshop->getMessage("Message2"));
 				}
