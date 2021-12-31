@@ -139,6 +139,10 @@ class EventListener implements Listener{
 
 			$shop = $this->shopRepository->findBySign($world, $coordinate);
 
+			if($shop === null){
+				return;
+			}
+
 			if($shop->getOwner() !== $player->getName() and !$player->hasPermission('economy-c-shop.force-close-shop')){
 				$event->cancel();
 				$player->sendMessage("You cannot break chest block because you are not owner.");
