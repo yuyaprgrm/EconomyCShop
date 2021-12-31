@@ -30,4 +30,6 @@ interface IShopRepository {
 	 * @return Shop|null
 	 */
 	public function findByChest(string $world, Coordinate $coordinate): ?Shop;
+
+	public function close(): void;
 }

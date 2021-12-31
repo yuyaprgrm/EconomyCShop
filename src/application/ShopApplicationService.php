@@ -47,7 +47,7 @@ class ShopApplicationService {
 		return $shop;
 	}
 
-	public function expandShopChest(Shop $shop, Chest $subChest): Shop{
+	public function addSubChest(Shop $shop, Chest $subChest): Shop{
 		$this->shopRepository->delete($shop);
 		$shop = new Shop(
 			$shop->getOwner(),
@@ -61,7 +61,21 @@ class ShopApplicationService {
 		return $shop;
 	}
 
-	public function breakShop(Shop $shop){
+	public function removeSubChest(Shop $shop): Shop{
+		$this->shopRepository->delete($shop);
+		$shop = new Shop(
+			$shop->getOwner(),
+			$shop->getWorld(),
+			$shop->getProduct(),
+			$shop->getSign(),
+			$shop->getMainChest()
+		);
+		$this->shopRepository->save($shop);
+		return $shop;
+
+	}
+
+	public function destroyShop(Shop $shop){
 		$this->shopRepository->delete($shop);
 	}
 }

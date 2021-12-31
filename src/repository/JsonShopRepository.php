@@ -90,7 +90,7 @@ class JsonShopRepository implements IShopRepository {
 	}
 
 	public function save(Shop $shop): void{
-		$this->jsonConfig->set($shop->getId(), $shop);
+		$this->jsonConfig->set($shop->getId(), $this->serialize($shop));
 		$this->map($shop);
 	}
 
@@ -106,5 +106,9 @@ class JsonShopRepository implements IShopRepository {
 
 	public function findByChest(string $world, Coordinate $coordinate): ?Shop{
 		return $this->chestToShopMapper->get($world, $coordinate->getHash());
+	}
+
+	public function close(): void{
+		$this->jsonConfig->save();
 	}
 }

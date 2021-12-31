@@ -4,3 +4,9 @@ author: famima65536
 version: 1.0.0
 api: 4.0.0
 src-namespace-prefix: famima65536\EconomyCShop
+depend:
+  - EconomyAPI
+permissions:
+  economy-c-shop.force-close-shop:
+    description: allow to close others' shop forcibly.
+    default: op

@@ -49,4 +49,12 @@ class Coordinate implements \JsonSerializable {
 	public function getHash(): int{
 		return World::blockHash($this->x, $this->y, $this->z);
 	}
+
+	public function equals(Coordinate $other): bool{
+		return (
+			$this->x === $other->x and
+			$this->y === $other->y and
+			$this->z === $other->z
+		);
+	}
 }
