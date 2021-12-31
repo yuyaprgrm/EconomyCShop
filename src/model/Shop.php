@@ -47,11 +47,4 @@ class Shop {
 	public function getSubChest(): ?Coordinate{
 		return $this->subChest;
 	}
-
-	/**
-	 * @param Coordinate|null $subChest
-	 */
-	public function setSubChest(?Coordinate $subChest): void{
-		$this->subChest = $subChest;
-	}
 }
