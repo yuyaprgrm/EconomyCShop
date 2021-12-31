@@ -18,12 +18,6 @@ interface IShopRepository {
 	public function delete(Shop $shop): void;
 
 	/**
-	 * @param string $owner
-	 * @return Shop[]
-	 */
-	public function findByOwner(string $owner): array;
-
-	/**
 	 * @param Coordinate $coordinate
 	 * @return Shop|null
 	 */
