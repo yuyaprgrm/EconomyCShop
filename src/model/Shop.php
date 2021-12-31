@@ -6,6 +6,7 @@ namespace famima65536\EconomyCShop\model;
 class Shop {
 	public function __construct(
 		private string $owner,
+		private string $world,
 		private Product $product,
 		private Coordinate $signCoordinate,
 		private Coordinate $mainChest,
@@ -18,6 +19,13 @@ class Shop {
 	 */
 	public function getOwner(): string{
 		return $this->owner;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getWorld(): string{
+		return $this->world;
 	}
 
 	/**
@@ -47,4 +55,5 @@ class Shop {
 	public function getSubChest(): ?Coordinate{
 		return $this->subChest;
 	}
+
 }
