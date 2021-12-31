@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "famima65536\\EconomyCShop\\": "src"
+            "famima65536\\EconomyCShop\\": "src/"
         }
     }
 }
