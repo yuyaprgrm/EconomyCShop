@@ -23,16 +23,17 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\item\Item;
 use pocketmine\math\Facing;
+use pocketmine\utils\Config;
 use pocketmine\world\Position;
 
 class EventListener implements Listener{
 
 	public function __construct(
-		private EconomyCShop $plugin,
 		private ShopApplicationService $shopApplicationService,
 		private ShopService $shopService,
 		private IShopRepository $shopRepository,
-		private EconomyWrapper $economyWrapper
+		private EconomyWrapper $economyWrapper,
+		private Config $message
 	){
 	}
 
@@ -62,7 +63,7 @@ class EventListener implements Listener{
 		try{
 			$product = SignParser::getInstance()->parse($signText);
 		}catch(InvalidProductException $exception){
-			$player->sendMessage($exception->getMessage());
+			$player->sendMessage($this->message->getNested('create-shop.invalid-product', 'create-shop.invalid-product'));
 			return;
 		}
 
@@ -90,17 +91,17 @@ class EventListener implements Listener{
 		try{
 			$this->shopApplicationService->createShop($player, $product, $signBlock, $mainchest, $subchest);
 		}catch(DuplicateShopException $exception){
-			$player->sendMessage($exception->getMessage());
+			$player->sendMessage($this->message->getNested('create-shop.duplicate', 'create-shop.duplicate'));
 			return;
 		}
 		$shopSignText = new SignText([
-			"[§aECS§0]{$player->getName()}",
+			"{$player->getName()}",
 			"price:{$product->getPrice()}",
 			"amount:{$product->getAmount()}",
 			$product->getItem()->getVanillaName()
 		]);
 		$event->setNewText($shopSignText);
-		$player->sendMessage("CShop has been created.");
+		$player->sendMessage($this->message->getNested('create-shop.success', 'create-shop.success'));
 	}
 
 	public function onBlockBreak(BlockBreakEvent $event){
@@ -117,13 +118,13 @@ class EventListener implements Listener{
 			$shop = $this->shopRepository->findByChest($world, $coordinate);
 			if($shop->getMainChest()->equals($coordinate)){
 				$event->cancel();
-				$player->sendMessage("You cannot break chest block because chest shop is open.");
+				$player->sendMessage($this->message->getNested("break-shop-chest.shop-is-still-open", "break-shop-chest.shop-is-still-open"));
 				return;
 			}
 
 			if($shop->getOwner() !== $player->getName()){
 				$event->cancel();
-				$player->sendMessage("You cannot break chest block because you are not owner.");
+				$player->sendMessage($this->message->getNested("break-shop-chest.player-is-not-owner", "break-shop-chest.player-is-not-owner"));
 				return;
 			}
 
@@ -145,12 +146,12 @@ class EventListener implements Listener{
 
 			if($shop->getOwner() !== $player->getName() and !$player->hasPermission('economy-c-shop.force-close-shop')){
 				$event->cancel();
-				$player->sendMessage("You cannot break chest block because you are not owner.");
+				$player->sendMessage($this->message->getNested("break-shop-sign.player-is-not-owner", "break-shop-sign.player-is-not-owner"));
 				return;
 			}
 
 			$this->shopApplicationService->destroyShop($shop);
-			$player->sendMessage("You have closed shop!");
+			$player->sendMessage($this->message->getNested("break-shop-sign.success", "break-shop-sign.success"));
 			return;
 		}
 	}
@@ -170,7 +171,7 @@ class EventListener implements Listener{
 
 			if($shop->getOwner() !== $player->getName()){
 				$event->cancel();
-				$player->sendMessage("You cannot open chest because you are not owner.");
+				$player->sendMessage($this->message->getNested("open-shop-chest.player-is-not-owner", "open-shop-chest.player-is-not-owner"));
 				return;
 			}
 		}
@@ -186,13 +187,13 @@ class EventListener implements Listener{
 			}
 
 			if($shop->getOwner() === $player->getName()){
-				$player->sendMessage("You cannot buy item because you are owner.");
+				$player->sendMessage($this->message->getNested("buy-item.player-is-owner", "buy-item.player-is-owner"));
 				return;
 			}
 
 			$product = $shop->getProduct();
 			if(!$player->getInventory()->canAddItem($product->getItem())){
-				$player->sendMessage("You cannot buy item because you do not have enough space in inventory.");
+				$player->sendMessage($this->message->getNested("buy-item.inventory-full", "buy-item.inventory-full"));
 				return;
 			}
 
@@ -205,17 +206,18 @@ class EventListener implements Listener{
 				$item = $product->getItem();
 				$item->setCount($item->getCount() - $remain[0]->getCount());
 				$tileChest->getInventory()->addItem($item);
-				$player->sendMessage("Shop chest is empty! Tell owner to supplement items.");
+				$player->sendMessage($this->message->getNested("buy-item.chest-empty", "buy-item.chest-empty"));
 				return;
 			}
 
 			if(!$this->economyWrapper->transfer($player->getName(), $shop->getOwner(), $product->getPrice())){
 				$tileChest->getInventory()->addItem($product->getItem());
-				$player->sendMessage("You have not enough money to buy product, or owner have too much money to sell.");
+				$player->sendMessage($this->message->getNested("buy-item.transaction-fail", "buy-item.transaction-fail"));
 				return;
 			}
 
 			$player->getInventory()->addItem($product->getItem());
+			$player->sendMessage($this->message->getNested("buy-item.success", "buy-item.success"));
 		}
 	}
 

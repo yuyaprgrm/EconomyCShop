@@ -1,0 +1,22 @@
+create-shop:
+  success: Chest Shop has been created.
+  duplicate: There has already been a chest shop.
+  invalid-product: Price or amount, or both are invalid. They should be more than zero.
+
+break-shop-chest:
+  shop-is-still-open: You cannot break chest block because chest shop is still open.
+  player-is-not-owner: You cannot break chest block because you are not owner.
+
+break-shop-sign:
+  success: You have closed shop!
+  player-is-not-owner: You cannot break shop sign because you are not owner.
+
+open-shop-chest:
+  player-is-not-owner: You cannot open chest because you are not owner.
+
+buy-item:
+  success: You bought item.
+  player-is-owner: You cannot buy item because you are owner.
+  inventory-full: You cannot buy item because you do not have enough space in inventory.
+  chest-empty: Shop chest is empty! Tell owner to supplement items.
+  transaction-fail: You have not enough money to buy product, or owner have too much money to sell.

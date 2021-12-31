@@ -21,13 +21,14 @@ class EconomyCShop extends PluginBase{
 	}
 
 	public function onEnable(): void{
+		$this->saveResource("message.yml");
 		$shopService = new ShopService($this->shopRepository);
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(
-			$this,
 			new ShopApplicationService($shopService, $this->shopRepository),
 			$shopService,
 			$this->shopRepository,
-			new EconomyAPIWrapper()
+			new EconomyAPIWrapper(),
+			new Config(Path::join($this->getDataFolder(), "message.yml"), Config::YAML)
 		), $this);
 	}
 
