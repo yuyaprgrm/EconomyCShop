@@ -8,6 +8,11 @@ use InvalidArgumentException;
 use pocketmine\item\Item;
 
 class Product {
+	/**
+	 * @param Item $item
+	 * @param int $price
+	 * @throws InvalidProductException when given invalid product information.
+	 */
 	public function __construct(
 		private Item $item,
 		private int $price
