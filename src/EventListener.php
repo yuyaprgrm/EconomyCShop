@@ -232,7 +232,6 @@ class EventListener implements Listener{
 		$position = $block->getPosition();
 		$tile = $block->getPosition()->getWorld()->getTile($position);
 
-
 		if($tile instanceof TileChest){
 			foreach(
 				[
@@ -246,7 +245,7 @@ class EventListener implements Listener{
 					if($pair instanceof TileChest and !$pair->isPaired()){
 						$shop = $this->shopRepository->findByChest($position->getWorld()->getFolderName(), Coordinate::fromPosition($c->getPosition()));
 						if($shop !== null){
-							$this->shopApplicationService->addSubChest($shop, $c);
+							$this->shopApplicationService->addSubChest($shop, $block);
 							break;
 						}
 					}
