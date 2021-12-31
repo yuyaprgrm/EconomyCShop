@@ -2,6 +2,7 @@
 
 namespace famima65536\EconomyCShop\model;
 
+use pocketmine\world\Position;
 use pocketmine\world\World;
 
 class Coordinate implements \JsonSerializable {
@@ -10,6 +11,10 @@ class Coordinate implements \JsonSerializable {
 		private int $y,
 		private int $z
 	){
+	}
+
+	public static function fromPosition(Position $position): self{
+		return new Coordinate($position->getFloorX(), $position->getFloorY(), $position->getFloorZ());
 	}
 
 	/**
