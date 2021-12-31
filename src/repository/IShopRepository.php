@@ -18,14 +18,16 @@ interface IShopRepository {
 	public function delete(Shop $shop): void;
 
 	/**
+	 * @param string $world
 	 * @param Coordinate $coordinate
 	 * @return Shop|null
 	 */
-	public function findBySign(Coordinate $coordinate): ?Shop;
+	public function findBySign(string $world, Coordinate $coordinate): ?Shop;
 
 	/**
+	 * @param string $world
 	 * @param Coordinate $coordinate
 	 * @return Shop|null
 	 */
-	public function findByChest(Coordinate $coordinate): ?Shop;
+	public function findByChest(string $world, Coordinate $coordinate): ?Shop;
 }
