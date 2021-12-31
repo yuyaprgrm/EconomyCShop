@@ -121,7 +121,7 @@ class EventListener implements Listener{
 				return;
 			}
 
-			if($shop->getOwner() !== $player->getName() and !$player->hasPermission('economy-c-shop.force-close-shop')){
+			if($shop->getOwner() !== $player->getName()){
 				$event->cancel();
 				$player->sendMessage("You cannot break chest block because you are not owner.");
 				return;
