@@ -13,6 +13,11 @@ interface IShopRepository {
 	public function save(Shop $shop): void;
 
 	/**
+	 * @param Shop $shop
+	 */
+	public function delete(Shop $shop): void;
+
+	/**
 	 * @param string $owner
 	 * @return Shop[]
 	 */
