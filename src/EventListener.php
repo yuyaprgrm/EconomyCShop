@@ -177,6 +177,9 @@ class EventListener implements Listener{
 			$coordinate = Coordinate::fromPosition($position);
 
 			$shop = $this->shopRepository->findBySign($world, $coordinate);
+			if($shop === null){
+				return;
+			}
 
 			if($shop->getOwner() === $player->getName()){
 				$player->sendMessage("You cannot buy item because you are owner.");
