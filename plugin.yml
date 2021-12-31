@@ -1,5 +1,6 @@
 name: EconomyCShop
-main: FAMIMA\ECShop\EconomyCShop
-author: FAMIMA
-version: 0.6.2
-api: 3.0.0
+main: famima65536\EconomyCShop\EconomyCShop
+author: famima65536
+version: 1.0.0
+api: 4.0.0
+src-namespace-prefix: famima65536\EconomyCShop

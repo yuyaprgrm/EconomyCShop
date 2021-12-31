@@ -14,5 +14,10 @@
     },
     "require-dev": {
         "pocketmine/pocketmine-mp": "^4.0.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "famima65536\\EconomyCShop\\": "src"
+        }
     }
 }
