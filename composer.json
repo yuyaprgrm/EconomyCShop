@@ -1,0 +1,18 @@
+{
+    "name": "famima65536/ecconomy-cshop",
+    "description": "chest shop plugin for pocketmine-mp",
+    "minimum-stability": "stable",
+    "license": "LGPL-3.0-only",
+    "authors": [
+        {
+            "name": "famima65536",
+            "email": "famima65536@gmail.com"
+        }
+    ],
+    "require": {
+        "ext-sqlite3": "*"
+    },
+    "require-dev": {
+        "pocketmine/pocketmine-mp": "^4.0.3"
+    }
+}
