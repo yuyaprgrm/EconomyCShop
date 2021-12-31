@@ -3,12 +3,15 @@
 namespace famima65536\EconomyCShop\model;
 
 
+/**
+ * use world + sign as ShopId.
+ */
 class Shop {
 	public function __construct(
 		private string $owner,
 		private string $world,
 		private Product $product,
-		private Coordinate $signCoordinate,
+		private Coordinate $sign,
 		private Coordinate $mainChest,
 		private ?Coordinate $subChest=null
 	){
@@ -38,8 +41,8 @@ class Shop {
 	/**
 	 * @return Coordinate
 	 */
-	public function getSignCoordinate(): Coordinate{
-		return $this->signCoordinate;
+	public function getSign(): Coordinate{
+		return $this->sign;
 	}
 
 	/**
@@ -54,6 +57,10 @@ class Shop {
 	 */
 	public function getSubChest(): ?Coordinate{
 		return $this->subChest;
+	}
+
+	public function getId(): string{
+		return "{$this->getWorld()}+{$this->sign->getX()}:{$this->sign->getY()}:{$this->sign->getZ()}";
 	}
 
 }
