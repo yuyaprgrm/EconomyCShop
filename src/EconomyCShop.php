@@ -20,6 +20,7 @@ class EconomyCShop extends PluginBase{
 	public function onLoad(): void{
 		$this->saveDefaultConfig();
 		$this->saveResource("message.yml");
+		$this->setupRepository();
 	}
 
 	public function onEnable(): void{
@@ -34,7 +35,6 @@ class EconomyCShop extends PluginBase{
 	}
 
 	private function setupRepository(){
-
 		$selectedRepository = "";
 		switch($this->getConfig()->get("repository")){
 			default:
@@ -43,13 +43,13 @@ class EconomyCShop extends PluginBase{
 				$this->shopRepository = new JsonShopRepository(new Config(Path::join($this->getDataFolder(), "shops.json")));
 				$selectedRepository = "json";
 				break;
-//			case "sqlite":
-//				$this->shopRepository = new SqliteShopRepository(new SQLite3(Path::join($this->getDataFolder(), "shops.sqlite")));
-//				$selectedRepository = "sqlite";
-//				break;
+			case "sqlite":
+				$this->shopRepository = new SqliteShopRepository(new SQLite3(Path::join($this->getDataFolder(), "shops.sqlite")));
+				$selectedRepository = "sqlite";
+				break;
 		}
 
-		$this->getLogger()->info("${selectedRepository} is selected to save shop data");
+		$this->getLogger()->notice("${selectedRepository} is selected to save shop data");
 	}
 
 
