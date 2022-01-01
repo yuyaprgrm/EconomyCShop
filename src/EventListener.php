@@ -9,6 +9,7 @@ use famima65536\EconomyCShop\model\exception\InvalidProductException;
 use famima65536\EconomyCShop\model\Product;
 use famima65536\EconomyCShop\repository\IShopRepository;
 use famima65536\EconomyCShop\service\ShopService;
+use famima65536\EconomyCShop\utils\ChestPairingHelper;
 use famima65536\EconomyCShop\utils\economy\EconomyAPIWrapper;
 use famima65536\EconomyCShop\utils\economy\EconomyWrapper;
 use famima65536\EconomyCShop\utils\SignParser;
@@ -232,27 +233,14 @@ class EventListener implements Listener{
 		}
 
 		$position = $block->getPosition();
-		$tile = $block->getPosition()->getWorld()->getTile($position);
+		$pair = ChestPairingHelper::getPairedChest($block);
+		if($pair === null){
+			return;
+		}
 
-		if($tile instanceof TileChest){
-			foreach(
-				[
-					Facing::rotateY($block->getFacing(), true),
-					Facing::rotateY($block->getFacing(), false)
-				] as $side
-			){
-				$c = $block->getSide($side);
-				if($c instanceof Chest and $c->isSameType($block) and $c->getFacing() === $block->getFacing()){
-					$pair = $block->getPosition()->getWorld()->getTile($c->getPosition());
-					if($pair instanceof TileChest and !$pair->isPaired()){
-						$shop = $this->shopRepository->findByChest($position->getWorld()->getFolderName(), Coordinate::fromPosition($c->getPosition()));
-						if($shop !== null){
-							$this->shopApplicationService->addSubChest($shop, $block);
-							break;
-						}
-					}
-				}
-			}
+		$shop = $this->shopRepository->findByChest($position->getWorld()->getFolderName(), Coordinate::fromPosition($pair->getPosition()));
+		if($shop !== null){
+			$this->shopApplicationService->addSubChest($shop, $block);
 		}
 	}
 }
