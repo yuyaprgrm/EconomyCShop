@@ -212,14 +212,17 @@ class EventListener implements Listener{
 				return;
 			}
 
-			if(!$this->economyWrapper->transfer($player->getName(), $shop->getOwner(), $product->getPrice())){
-				$tileChest->getInventory()->addItem($product->getItem());
-				$player->sendMessage($this->message->getNested("buy-item.transaction-fail", "buy-item.transaction-fail"));
-				return;
-			}
-
-			$player->getInventory()->addItem($product->getItem());
-			$player->sendMessage($this->message->getNested("buy-item.success", "buy-item.success"));
+			$this->economyWrapper->transfer($player->getName(), $shop->getOwner(), $product->getPrice(), 
+				onSuccess: function() use($player, $product): void{				
+					$player->getInventory()->addItem($product->getItem());
+					$player->sendMessage($this->message->getNested("buy-item.success", "buy-item.success"));
+				}, 
+				onFailure: function() use($tileChest, $product, $player): void{
+					$tileChest->getInventory()->addItem($product->getItem());
+					$player->sendMessage($this->message->getNested("buy-item.transaction-fail", "buy-item.transaction-fail"));
+					return;
+				}
+			);
 		}
 	}
 
