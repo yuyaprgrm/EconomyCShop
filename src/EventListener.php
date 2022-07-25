@@ -19,6 +19,7 @@ use pocketmine\block\utils\SignText;
 use pocketmine\block\WallSign;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;
+use pocketmine\event\block\ChestPairEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
@@ -224,23 +225,14 @@ class EventListener implements Listener{
 
 	/**
 	 * @priority MONITOR
-	 * @param BlockPlaceEvent $event
 	 */
-	public function onBlockPlace(BlockPlaceEvent $event){
-		$block = $event->getBlock();
-		if(!$block instanceof Chest){
-			return;
-		}
-
-		$position = $block->getPosition();
-		$pair = ChestPairingHelper::getPairedChest($block);
-		if($pair === null){
-			return;
-		}
-
-		$shop = $this->shopRepository->findByChest($position->getWorld()->getFolderName(), Coordinate::fromPosition($pair->getPosition()));
-		if($shop !== null){
-			$this->shopApplicationService->addSubChest($shop, $block);
+	public function onChestPair(ChestPairEvent $event){
+		foreach([[$event->getLeft(), $event->getRight()], [$event->getRight(), $event->getLeft()]] as [$chest, $pair]){
+			$position = $pair->getPosition();
+			$shop = $this->shopRepository->findByChest($position->getWorld()->getFolderName(), Coordinate::fromPosition($position));
+			if($shop !== null){
+				$this->shopApplicationService->addSubChest($shop, $chest);
+			}
 		}
 	}
 }
