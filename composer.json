@@ -13,8 +13,34 @@
         "ext-sqlite3": "*"
     },
     "require-dev": {
-        "pocketmine/pocketmine-mp": "^4.0.3"
+        "pocketmine/pocketmine-mp": "^4.3.0",
+        "cooldogedev/bedrock-economy": "2.0.7",
+        "cooldogedev/libsql": "dev-main",
+        "phpstan/phpstan": "^1.7"
     },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "cooldogedev/bedrock-economy",
+                "version": "2.0.8",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Nakidori/BedrockEconomy",
+                    "reference": "main"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "cooldogedev\\BedrockEconomy\\": "src/cooldogedev/BedrockEconomy/"
+                    }
+                }
+            }
+        },
+        {
+            "type": "git",
+            "url": "https://github.com/cooldogedev/libSQL/"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "famima65536\\EconomyCShop\\": "src/"
