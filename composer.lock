@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2537c71c42f8ba6e81269da6692661b8",
+    "content-hash": "56c82dc73f2b6a0731a5ddbc0e0592f0",
     "packages": [],
     "packages-dev": [
         {
@@ -1126,6 +1126,239 @@
             "time": "2022-03-27T21:42:02+00:00"
         },
         {
+            "name": "sof3/await-generator",
+            "version": "3.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SOF3/await-generator.git",
+                "reference": "05f14d8d5122edb2e0e4058770f7f36756062b9c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SOF3/await-generator/zipball/05f14d8d5122edb2e0e4058770f7f36756062b9c",
+                "reference": "05f14d8d5122edb2e0e4058770f7f36756062b9c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "composer/package-versions-deprecated": "1.11.99.1",
+                "infection/infection": "^0.18.2 || ^0.20.2 || ^0.26.0",
+                "phpstan/phpstan": "^0.12.84",
+                "phpunit/phpunit": "^9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SOFe\\AwaitGenerator\\": "await-generator/src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "SOFe",
+                    "email": "sofe2038@gmail.com"
+                }
+            ],
+            "description": "Use async/await in PHP using generators",
+            "time": "2022-06-12T03:06:57+00:00"
+        },
+        {
+            "name": "sof3/await-std",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SOF3/await-std.git",
+                "reference": "6abd0dc7c509545eafefd38c30729467c4a647e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SOF3/await-std/zipball/6abd0dc7c509545eafefd38c30729467c4a647e0",
+                "reference": "6abd0dc7c509545eafefd38c30729467c4a647e0",
+                "shasum": ""
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "^4.0.0",
+                "sof3/await-generator": "^3.3.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.84"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SOFe\\AwaitStd\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Writing user-friendly PocketMine plugins fluently with await-generator style",
+            "time": "2022-05-27T05:10:08+00:00"
+        },
+        {
+            "name": "sof3/infoapi",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SOF3/InfoAPI.git",
+                "reference": "35c9cec849844eccf2ea8f1fa62b91719fde4da4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SOF3/InfoAPI/zipball/35c9cec849844eccf2ea8f1fa62b91719fde4da4",
+                "reference": "35c9cec849844eccf2ea8f1fa62b91719fde4da4",
+                "shasum": ""
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "^4.0.0"
+            },
+            "require-dev": {
+                "infection/infection": "dev-master",
+                "phpstan/extension-installer": "^1.1.0",
+                "phpstan/phpstan": "^1.2.0",
+                "phpstan/phpstan-phpunit": "^1.0.0",
+                "phpunit/phpunit": "^9.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SOFe\\InfoAPI\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "time": "2022-02-18T13:09:22+00:00"
+        },
+        {
+            "name": "sof3/libasynql",
+            "version": "4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/poggit/libasynql.git",
+                "reference": "a55ecceb73e6aa99b80bbec2a78aed0c6341170c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/poggit/libasynql/zipball/a55ecceb73e6aa99b80bbec2a78aed0c6341170c",
+                "reference": "a55ecceb73e6aa99b80bbec2a78aed0c6341170c",
+                "shasum": ""
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "^4.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "poggit\\libasynql\\": "libasynql/src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "SOFe",
+                    "email": "sofe2038@gmail.com"
+                }
+            ],
+            "time": "2022-05-25T15:45:58+00:00"
+        },
+        {
+            "name": "sof3/rwlock",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SOF3/rwlock.php.git",
+                "reference": "7f9b59e488326619e9b24a39620ce747618362b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SOF3/rwlock.php/zipball/7f9b59e488326619e9b24a39620ce747618362b9",
+                "reference": "7f9b59e488326619e9b24a39620ce747618362b9",
+                "shasum": ""
+            },
+            "require": {
+                "sof3/await-generator": "^3.1.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SOFe\\RwLock\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "SOFe",
+                    "email": "sofe2038@gmail.com"
+                }
+            ],
+            "description": "Exclusive and Read-write locks for PHP",
+            "time": "2022-03-05T13:06:31+00:00"
+        },
+        {
+            "name": "sofe/capital",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SOF3/Capital.git",
+                "reference": "8003da9e594f759d20c711a1aef4ceda514212ad"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SOF3/Capital/zipball/8003da9e594f759d20c711a1aef4ceda514212ad",
+                "reference": "8003da9e594f759d20c711a1aef4ceda514212ad",
+                "shasum": ""
+            },
+            "require": {
+                "pocketmine/pocketmine-mp": "^4.0.0",
+                "sof3/await-generator": "^3.1",
+                "sof3/await-std": "dev-master",
+                "sof3/infoapi": "^1.2.1",
+                "sof3/libasynql": "^4.0.1",
+                "sof3/rwlock": "^0.1.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.4",
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-0": {
+                    "SOFe\\Capital\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "SOFe",
+                    "email": "sofe2038@gmail.com"
+                }
+            ],
+            "time": "2022-03-05T10:12:13+00:00"
+        },
+        {
             "name": "symfony/polyfill-php81",
             "version": "v1.26.0",
             "source": {
@@ -1306,7 +1539,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "cooldogedev/libsql": 20
+        "cooldogedev/libsql": 20,
+        "sof3/await-std": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
