@@ -15,7 +15,9 @@
     "require-dev": {
         "pocketmine/pocketmine-mp": "^4.3.0",
         "cooldogedev/bedrock-economy": "2.0.8",
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^1.8",
+        "sofe/capital": "0.1.2",
+        "sof3/await-std": "dev-master@dev"
     },
     "repositories": [
         {
