@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0f6199d307ac26d2589ac620773bf3b3",
+    "content-hash": "2537c71c42f8ba6e81269da6692661b8",
     "packages": [],
     "packages-dev": [
         {
@@ -116,10 +116,10 @@
         },
         {
             "name": "cooldogedev/bedrock-economy",
-            "version": "2.0.7",
+            "version": "2.0.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Nakidori/BedrockEconomy",
+                "url": "https://github.com/cooldogedev/BedrockEconomy",
                 "reference": "main"
             },
             "type": "library",
