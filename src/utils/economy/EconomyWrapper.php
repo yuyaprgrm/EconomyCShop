@@ -2,12 +2,15 @@
 
 namespace famima65536\EconomyCShop\utils\economy;
 
+use Closure;
+
 interface EconomyWrapper {
 	/**
 	 * @param string $from
 	 * @param string $to
 	 * @param int $amount
-	 * @return bool return true iff transaction is successfully completed
+	 * @param Closure $onSuccess called when successful
+	 * @param Closure $onFailure called when failed
 	 */
-	public function transfer(string $from, string $to, int $amount): bool;
+	public function transfer(string $from, string $to, int $amount, Closure $onSuccess, Closure $onFailure): void;
 }
