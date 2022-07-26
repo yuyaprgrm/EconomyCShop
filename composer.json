@@ -16,7 +16,7 @@
         "pocketmine/pocketmine-mp": "^4.3.0",
         "cooldogedev/bedrock-economy": "2.0.8",
         "cooldogedev/libsql": "dev-main",
-        "phpstan/phpstan": "^1.7"
+        "phpstan/phpstan": "^1.8"
     },
     "repositories": [
         {

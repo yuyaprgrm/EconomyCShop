@@ -7,7 +7,9 @@ use famima65536\EconomyCShop\repository\IShopRepository;
 use famima65536\EconomyCShop\repository\JsonShopRepository;
 use famima65536\EconomyCShop\repository\SqliteShopRepository;
 use famima65536\EconomyCShop\service\ShopService;
+use famima65536\EconomyCShop\utils\economy\BedrockEconomyWrapper;
 use famima65536\EconomyCShop\utils\economy\EconomyAPIWrapper;
+use famima65536\EconomyCShop\utils\MessageManager;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use SQLite3;
@@ -25,16 +27,37 @@ class EconomyCShop extends PluginBase{
 
 	public function onEnable(): void{
 		$shopService = new ShopService($this->shopRepository);
+		$nestedMessages = (new Config(Path::join($this->getDataFolder(), "message.yml"), Config::YAML))->getAll();
+		$messageManager = new MessageManager(self::flattenArray($nestedMessages), (bool) $this->getConfig()->get("client-side-translation", false));
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(
 			new ShopApplicationService($shopService, $this->shopRepository),
 			$shopService,
 			$this->shopRepository,
-			new EconomyAPIWrapper(),
-			new Config(Path::join($this->getDataFolder(), "message.yml"), Config::YAML)
+			new BedrockEconomyWrapper(),
+			$messageManager
 		), $this);
 	}
 
-	private function setupRepository(){
+	/**
+	 * @phpstan-param mixed[] $array nested
+	 * @phpstan-return array<string, string>
+	 */
+	private static function flattenArray(array $array) : array{
+		$flattened = [];
+		foreach($array as $k => $v){
+			if(is_array($v)){
+				foreach(self::flattenArray($v) as $k2 => $v2){
+					$flattened["$k.$k2"] = $v2;
+				}
+			}else{
+				assert(is_string($v) || is_int($v) || is_float($v) || is_bool($v));
+				$flattened[$k] = (string) $v;
+			}
+		}
+		return $flattened;
+	}
+
+	private function setupRepository() : void{
 		$selectedRepository = "";
 		switch($this->getConfig()->get("repository")){
 			default:
