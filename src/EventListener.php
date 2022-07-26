@@ -11,8 +11,10 @@ use famima65536\EconomyCShop\model\Shop;
 use famima65536\EconomyCShop\repository\IShopRepository;
 use famima65536\EconomyCShop\service\ShopService;
 use famima65536\EconomyCShop\utils\economy\EconomyWrapper;
+use famima65536\EconomyCShop\utils\economy\TransactionFailureReason;
 use famima65536\EconomyCShop\utils\MessageManager;
 use famima65536\EconomyCShop\utils\SignParser;
+use InvalidArgumentException;
 use pocketmine\block\Chest;
 use pocketmine\block\tile\Chest as TileChest;
 use pocketmine\block\utils\SignText;
@@ -219,9 +221,17 @@ class EventListener implements Listener{
 					$player->getInventory()->addItem($product->getItem());
 					$player->sendMessage($this->messageManager->get("buy-item.success"));
 				}, 
-				onFailure: function() use($tileChest, $product, $player): void{
+				onFailure: function(TransactionFailureReason $reason) use($tileChest, $product, $player): void{
+					$key = match($reason->id()){
+						TransactionFailureReason::ACCOUNT_NOT_FOUND()->id() => "buy-item.transaction-fail.acccount-not-found",
+						TransactionFailureReason::BALANCE_CAP_EXCEEDED()->id() => "buy-item.transaction-fail.balance-exceeded",
+						TransactionFailureReason::BALANCE_INSUFFICIENT()->id() => "buy-item.transaction-fail.balance-insufficient",
+						TransactionFailureReason::CAPITAL_PLAYER_OFFLINE()->id() => "buy-item.transaction-fail.capital-player-offline",
+						TransactionFailureReason::UNKNOWN()->id() => "buy-item.transaction-fail.unknown",
+						default => throw new InvalidArgumentException("invalid reason.")
+					};
 					$tileChest->getInventory()->addItem($product->getItem());
-					$player->sendMessage($this->messageManager->get("buy-item.transaction-fail"));
+					$player->sendMessage($this->messageManager->get($key));
 					return;
 				}
 			);
