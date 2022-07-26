@@ -3,8 +3,6 @@
 namespace famima65536\EconomyCShop\utils\economy;
 
 use Closure;
-use cooldogedev\BedrockEconomy\api\BedrockEconomyAPI;
-use cooldogedev\libSQL\context\ClosureContext;
 use pocketmine\Server;
 use SOFe\Capital\Capital;
 use SOFe\Capital\CapitalException;
