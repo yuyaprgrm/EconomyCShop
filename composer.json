@@ -15,7 +15,6 @@
     "require-dev": {
         "pocketmine/pocketmine-mp": "^4.3.0",
         "cooldogedev/bedrock-economy": "2.0.8",
-        "cooldogedev/libsql": "dev-main",
         "phpstan/phpstan": "^1.8"
     },
     "repositories": [
@@ -32,6 +31,26 @@
                 "autoload": {
                     "psr-4": {
                         "cooldogedev\\BedrockEconomy\\": "src/cooldogedev/BedrockEconomy/"
+                    }
+                },
+                "require": {
+                    "cooldogedev/libsql": "0.1.1"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "cooldogedev/libsql",
+                "version": "0.1.1",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/cooldogedev/libSQL",
+                    "reference": "main"
+                },
+                "autoload": {
+                    "psr-4": {
+                        "cooldogedev\\libSQL\\": "src/cooldogedev/libSQL/"
                     }
                 }
             }

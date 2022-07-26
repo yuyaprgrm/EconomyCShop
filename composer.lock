@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e37bc36a0cab3f60e03f0c0df9ff2374",
+    "content-hash": "b2da0b82fa1ae0221e3fc92fb8a75e84",
     "packages": [],
     "packages-dev": [
         {
@@ -122,6 +122,9 @@
                 "url": "https://github.com/cooldogedev/BedrockEconomy",
                 "reference": "main"
             },
+            "require": {
+                "cooldogedev/libsql": "0.1.1"
+            },
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -131,25 +134,18 @@
         },
         {
             "name": "cooldogedev/libsql",
-            "version": "dev-main",
+            "version": "0.1.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/cooldogedev/libSQL/",
-                "reference": "054b036bfdbfd8d8121ab2ec887441daaebc616c"
+                "url": "https://github.com/cooldogedev/libSQL",
+                "reference": "main"
             },
-            "default-branch": true,
             "type": "library",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "cooldogedev",
-                    "email": "developmentdoge@gmail.com"
+            "autoload": {
+                "psr-4": {
+                    "cooldogedev\\libSQL\\": "src/cooldogedev/libSQL/"
                 }
-            ],
-            "description": "A minimalistic implementation of asynchronous SQL",
-            "time": "2022-02-24T20:10:42+00:00"
+            }
         },
         {
             "name": "fgrosse/phpasn1",
@@ -1305,9 +1301,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "cooldogedev/libsql": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
