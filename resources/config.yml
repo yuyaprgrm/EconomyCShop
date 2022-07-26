@@ -3,6 +3,10 @@ version: 1
 # [json, sqlite] - default json
 repository: json
 
+# Which economy plugin to use.
+# [ BedrockEconomy, Capital]
+economy-plugin: BedrockEconomy
+
 capital-option:
   selector:
   

@@ -13,10 +13,15 @@ use SOFe\Capital\Schema;
 
 class CapitalWrapper implements EconomyWrapper {
 
+	private Schema\Complete $selector;
+
     public function __construct(
 		private Server $server,
-        private Schema\Complete $selector
+        array $selectorConfig
     ){
+		Capital::api("0.1.0", function(Capital $api) use($selectorConfig){
+			$this->selector = $api->completeConfig($selectorConfig);
+		});
     }
 
 	/**
