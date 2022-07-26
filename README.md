@@ -10,5 +10,9 @@ ChestShop for EconomyAPI.
    4. Line 4: item:string(item name) or (id:int):(meta:int)
 3. Complete!
 
+## Config
+- `repository` determines how to store shop data. (json or sqlite)
+- `economy-plugin` determines which economy plugin to use. (BedrockEconomy or Capital)
+ 
 ## Permission
 - `economy-c-shop.force-close-shop` allow to destroy others' shop.
