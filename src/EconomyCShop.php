@@ -94,7 +94,7 @@ class EconomyCShop extends PluginBase{
 			$this->getLogger()->critical('economy-plugin in config.yml should be BedrockEconomy or Capital.');
 			return null;
 		}
-		if($this->getServer()->getPluginManager()->getPlugin($plugin)?->isEnabled()){
+		if(!$this->getServer()->getPluginManager()->getPlugin($plugin)?->isEnabled()){
 			$this->getLogger()->critical("Plugin $plugin is not detected.");
 			return null;
 		}
