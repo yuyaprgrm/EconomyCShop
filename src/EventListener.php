@@ -41,12 +41,6 @@ class EventListener implements Listener{
 
 
 	public function onSignChange(SignChangeEvent $event) : void{
-		$oldText = $event->getOldText();
-		$newText = $event->getNewText();
-		for($i=0; $i<SignText::LINE_COUNT; ++$i){
-			if($oldText->getLine($i) !== $newText->getLine($i))
-				return;
-		}
 		$this->onEndSignEdit($event);
 	}
 
@@ -54,7 +48,7 @@ class EventListener implements Listener{
 	 * @notHandler
 	 * @param SignChangeEvent $event
 	 */
-	public function onEndSignEdit(SignChangeEvent $event) : void{
+	private function onEndSignEdit(SignChangeEvent $event) : void{
 		$signBlock = $event->getSign();
 		$player = $event->getPlayer();
 		if(!$signBlock instanceof WallSign){
@@ -65,7 +59,7 @@ class EventListener implements Listener{
 		try{
 			$product = SignParser::getInstance()->parse($signText);
 		}catch(InvalidProductException $exception){
-			$player->sendMessage($this->messageManager->get('create-shop.invalid-product', ));
+			$player->sendMessage($this->messageManager->get('create-shop.invalid-product'));
 			return;
 		}
 
