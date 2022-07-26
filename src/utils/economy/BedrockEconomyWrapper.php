@@ -4,6 +4,7 @@ namespace famima65536\EconomyCShop\utils\economy;
 
 use Closure;
 use cooldogedev\BedrockEconomy\api\BedrockEconomyAPI;
+use cooldogedev\BedrockEconomy\query\ErrorCodes;
 use cooldogedev\libSQL\context\ClosureContext;
 
 class BedrockEconomyWrapper implements EconomyWrapper {
@@ -17,7 +18,13 @@ class BedrockEconomyWrapper implements EconomyWrapper {
 				if($success){
 					$onSuccess();
 				}else{
-					$onFailure();
+					$reason = match($error){
+						ErrorCodes::ERROR_CODE_BALANCE_INSUFFICIENT => TransactionFailureReason::BALANCE_INSUFFICIENT(),
+                        ErrorCodes::ERROR_CODE_BALANCE_CAP_EXCEEDED => TransactionFailureReason::BALANCE_CAP_EXCEEDED(),
+						ErrorCodes::ERROR_CODE_ACCOUNT_NOT_FOUND => TransactionFailureReason::ACCOUNT_NOT_FOUND(),
+						default => TransactionFailureReason::UNKNOWN()
+					};
+					$onFailure($reason);
 				}
 			}
 		));
