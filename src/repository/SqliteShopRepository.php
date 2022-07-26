@@ -6,6 +6,7 @@ use famima65536\EconomyCShop\model\Coordinate;
 use famima65536\EconomyCShop\model\Product;
 use famima65536\EconomyCShop\model\Shop;
 use pocketmine\item\Item;
+use RuntimeException;
 use SQLite3;
 
 class SqliteShopRepository implements IShopRepository {
@@ -23,10 +24,13 @@ class SqliteShopRepository implements IShopRepository {
 	 */
 	public function save(Shop $shop): void{
 		$stmt = $this->db->prepare("REPLACE INTO shops(owner, world, price, item, sign_x, sign_y, sign_z, mainchest_x, mainchest_y, mainchest_z, subchest_x, subchest_y, subchest_z) VALUES (:owner, :world, :price, :item, :sign_x, :sign_y, :sign_z, :mainchest_x, :mainchest_y, :mainchest_z, :subchest_x, :subchest_y, :subchest_z);");
+		if($stmt === false){
+			throw new RuntimeException("cannot prepare statement.");
+		}
 		$stmt->bindValue(":owner", $shop->getOwner(), SQLITE3_TEXT);
 		$stmt->bindValue(":world", $shop->getWorld(), SQLITE3_TEXT);
 		$stmt->bindValue(":price", $shop->getProduct()->getPrice(), SQLITE3_INTEGER);
-		$stmt->bindValue(":item", json_encode($shop->getProduct()->getItem(), JSON_PRETTY_PRINT), SQLITE3_TEXT);
+		$stmt->bindValue(":item", json_encode($shop->getProduct()->getItem()), SQLITE3_TEXT);
 		$stmt->bindValue(":sign_x", $shop->getSign()->getX(), SQLITE3_INTEGER);
 		$stmt->bindValue(":sign_y", $shop->getSign()->getY(), SQLITE3_INTEGER);
 		$stmt->bindValue(":sign_z", $shop->getSign()->getZ(), SQLITE3_INTEGER);
@@ -51,6 +55,9 @@ class SqliteShopRepository implements IShopRepository {
 	 */
 	public function delete(Shop $shop): void{
 		$stmt = $this->db->prepare("DELETE FROM shops WHERE sign_x = :sign_x AND sign_y = :sign_y AND sign_z = :sign_z");
+		if($stmt === false){
+			throw new RuntimeException("cannot prepare statement.");
+		}
 		$stmt->bindValue(":sign_x", $shop->getSign()->getX(), SQLITE3_INTEGER);
 		$stmt->bindValue(":sign_y", $shop->getSign()->getY(), SQLITE3_INTEGER);
 		$stmt->bindValue(":sign_z", $shop->getSign()->getZ(), SQLITE3_INTEGER);
@@ -62,30 +69,38 @@ class SqliteShopRepository implements IShopRepository {
 	 */
 	public function findBySign(string $world, Coordinate $coordinate): ?Shop{
 		$stmt = $this->db->prepare("SELECT owner, price, item, mainchest_x, mainchest_y, mainchest_z, subchest_x, subchest_y, subchest_z FROM shops WHERE world = :world AND sign_x = :sign_x AND sign_y = :sign_y AND sign_z = :sign_z");
+		if($stmt === false){
+			throw new RuntimeException("cannot prepare statement.");
+		}
 		$stmt->bindValue(":world", $world, SQLITE3_TEXT);
 		$stmt->bindValue(":sign_x", $coordinate->getX(), SQLITE3_INTEGER);
 		$stmt->bindValue(":sign_y", $coordinate->getY(), SQLITE3_INTEGER);
 		$stmt->bindValue(":sign_z", $coordinate->getZ(), SQLITE3_INTEGER);
 		$result = $stmt->execute();
-		$array = $result->fetchArray(SQLITE3_ASSOC);
-		if($array !== false){
-			$subchest = null;
-			if($array["subchest_x"] !== null){
-				$subchest = new Coordinate($array["subchest_x"], $array["subchest_y"], $array["subchest_z"]);
-			}
-			return new Shop(
-				$array["owner"],
-				$world,
-				new Product(
-					Item::jsonDeserialize(json_decode($array["item"], true)),
-					$array["price"]
-				),
-				$coordinate,
-				new Coordinate($array["mainchest_x"], $array["mainchest_y"], $array["mainchest_z"]),
-				$subchest
-			);
+		if($result === false){
+			throw new RuntimeException("cannot execute statement.");
 		}
-		return null;
+		$array = $result->fetchArray(SQLITE3_ASSOC);
+		if($array === false){
+			return null;
+		}
+		$subchest = null;
+		if($array["subchest_x"] !== null){
+			$subchest = new Coordinate($array["subchest_x"], $array["subchest_y"], $array["subchest_z"]);
+		}
+		/** @phpstan-var array{id: int, damage?: int, count?: int, nbt?: string, nbt_hex?: string, nbt_b64?: string} */
+		$serialized_item = json_decode($array["item"], true);
+		return new Shop(
+			$array["owner"],
+			$world,
+			new Product(
+				Item::jsonDeserialize($serialized_item),
+				$array["price"]
+			),
+			$coordinate,
+			new Coordinate($array["mainchest_x"], $array["mainchest_y"], $array["mainchest_z"]),
+			$subchest
+		);
 	}
 
 	/**
@@ -94,30 +109,43 @@ class SqliteShopRepository implements IShopRepository {
 	public function findByChest(string $world, Coordinate $coordinate): ?Shop{
 
 		$stmt = $this->db->prepare("SELECT owner, world, price, item, sign_x, sign_y, sign_z, mainchest_x, mainchest_y, mainchest_z, subchest_x, subchest_y, subchest_z FROM shops WHERE world = :world AND ((mainchest_x = :chest_x AND mainchest_y = :chest_y AND mainchest_z = :chest_z) OR (subchest_x = :chest_x AND subchest_y = :chest_y AND subchest_z = :chest_z))");
+		if($stmt === false){
+			throw new RuntimeException("cannot prepare statement.");
+		}
 		$stmt->bindValue(":world", $world, SQLITE3_TEXT);
 		$stmt->bindValue(":chest_x", $coordinate->getX(), SQLITE3_INTEGER);
 		$stmt->bindValue(":chest_y", $coordinate->getY(), SQLITE3_INTEGER);
 		$stmt->bindValue(":chest_z", $coordinate->getZ(), SQLITE3_INTEGER);
 		$result = $stmt->execute();
-		$array = $result->fetchArray(SQLITE3_ASSOC);
-		if($array !== false){
-			$subchest = null;
-			if($array["subchest_x"] !== null){
-				$subchest = new Coordinate($array["subchest_x"], $array["subchest_y"], $array["subchest_z"]);
-			}
-			return new Shop(
-				$array["owner"],
-				$world,
-				new Product(
-					Item::jsonDeserialize(json_decode($array["item"], true)),
-					$array["price"]
-				),
-				new Coordinate($array["sign_x"], $array["sign_y"], $array["sign_z"]),
-				new Coordinate($array["mainchest_x"], $array["mainchest_y"], $array["mainchest_z"]),
-				$subchest
-			);
+		if($result === false){
+			throw new RuntimeException("cannot execute statement.");
 		}
-		return null;
+		$array = $result->fetchArray(SQLITE3_ASSOC);
+		if($array === false){
+			return null;
+		}
+		/**
+		 * @phpstan-var array{ 
+		 *   owner: string, 
+		 *   item: string,
+		 *   price: int,
+		 *   sign_x: int, sign_y: int, sign_z: int, 
+		 *   mainchest_x: int, mainchest_y: int, mainchest_z: int,
+		 *   subchest_x: ?int, subchest_y: ?int, subchest_z: ?int,
+		 * } $array */
+		/** @phpstan-var array{ id: int, damage?: int, count?: int, nbt?: string, nbt_hex?: string, nbt_b64?: string} $item_json*/
+		$item_json = json_decode($array["item"], true);
+		return new Shop(
+			$array["owner"],
+			$world,
+			new Product(
+				Item::jsonDeserialize($item_json),
+				$array["price"]
+			),
+			new Coordinate($array["sign_x"], $array["sign_y"], $array["sign_z"]),
+			new Coordinate($array["mainchest_x"], $array["mainchest_y"], $array["mainchest_z"]),
+			($array["subchest_x"] !== null && $array["subchest_y"] !== null && $array["subchest_z"] !== null) ? new Coordinate($array["subchest_x"], $array["subchest_y"], $array["subchest_z"]) : null
+		);
 	}
 
 	public function close(): void{

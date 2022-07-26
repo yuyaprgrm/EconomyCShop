@@ -7,25 +7,23 @@ use famima65536\EconomyCShop\application\ShopApplicationService;
 use famima65536\EconomyCShop\model\Coordinate;
 use famima65536\EconomyCShop\model\exception\InvalidProductException;
 use famima65536\EconomyCShop\model\Product;
+use famima65536\EconomyCShop\model\Shop;
 use famima65536\EconomyCShop\repository\IShopRepository;
 use famima65536\EconomyCShop\service\ShopService;
-use famima65536\EconomyCShop\utils\ChestPairingHelper;
-use famima65536\EconomyCShop\utils\economy\EconomyAPIWrapper;
 use famima65536\EconomyCShop\utils\economy\EconomyWrapper;
+use famima65536\EconomyCShop\utils\MessageManager;
 use famima65536\EconomyCShop\utils\SignParser;
 use pocketmine\block\Chest;
 use pocketmine\block\tile\Chest as TileChest;
 use pocketmine\block\utils\SignText;
 use pocketmine\block\WallSign;
 use pocketmine\event\block\BlockBreakEvent;
-use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\ChestPairEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\item\Item;
 use pocketmine\math\Facing;
-use pocketmine\utils\Config;
 use pocketmine\world\Position;
 
 class EventListener implements Listener{
@@ -35,12 +33,12 @@ class EventListener implements Listener{
 		private ShopService $shopService,
 		private IShopRepository $shopRepository,
 		private EconomyWrapper $economyWrapper,
-		private Config $message
+		private MessageManager $messageManager
 	){
 	}
 
 
-	public function onSignChange(SignChangeEvent $event){
+	public function onSignChange(SignChangeEvent $event) : void{
 		$oldText = $event->getOldText();
 		$newText = $event->getNewText();
 		for($i=0; $i<SignText::LINE_COUNT; ++$i){
@@ -54,7 +52,7 @@ class EventListener implements Listener{
 	 * @notHandler
 	 * @param SignChangeEvent $event
 	 */
-	public function onEndSignEdit(SignChangeEvent $event){
+	public function onEndSignEdit(SignChangeEvent $event) : void{
 		$signBlock = $event->getSign();
 		$player = $event->getPlayer();
 		if(!$signBlock instanceof WallSign){
@@ -65,7 +63,7 @@ class EventListener implements Listener{
 		try{
 			$product = SignParser::getInstance()->parse($signText);
 		}catch(InvalidProductException $exception){
-			$player->sendMessage($this->message->getNested('create-shop.invalid-product', 'create-shop.invalid-product'));
+			$player->sendMessage($this->messageManager->get('create-shop.invalid-product', ));
 			return;
 		}
 
@@ -86,14 +84,16 @@ class EventListener implements Listener{
 		assert($tileChest instanceof TileChest);
 		$subchest = null;
 		if($tileChest->isPaired()){
-			$subchest = $tileChest->getPair()->getBlock();
+			$subchestTile = $tileChest->getPair();
+			assert($subchestTile instanceof TileChest);
+			$subchest = $subchestTile->getBlock();
 			assert($subchest instanceof Chest);
 		}
 
 		try{
 			$this->shopApplicationService->createShop($player, $product, $signBlock, $mainchest, $subchest);
 		}catch(DuplicateShopException $exception){
-			$player->sendMessage($this->message->getNested('create-shop.duplicate', 'create-shop.duplicate'));
+			$player->sendMessage($this->messageManager->get('create-shop.duplicate', []));
 			return;
 		}
 		$shopSignText = new SignText([
@@ -103,10 +103,10 @@ class EventListener implements Listener{
 			$product->getItem()->getVanillaName()
 		]);
 		$event->setNewText($shopSignText);
-		$player->sendMessage($this->message->getNested('create-shop.success', 'create-shop.success'));
+		$player->sendMessage($this->messageManager->get('create-shop.success'));
 	}
 
-	public function onBlockBreak(BlockBreakEvent $event){
+	public function onBlockBreak(BlockBreakEvent $event) : void{
 		$block = $event->getBlock();
 		$player = $event->getPlayer();
 		if($block instanceof Chest){
@@ -118,15 +118,17 @@ class EventListener implements Listener{
 			}
 
 			$shop = $this->shopRepository->findByChest($world, $coordinate);
+			assert($shop instanceof Shop);
+
 			if($shop->getMainChest()->equals($coordinate)){
 				$event->cancel();
-				$player->sendMessage($this->message->getNested("break-shop-chest.shop-is-still-open", "break-shop-chest.shop-is-still-open"));
+				$player->sendMessage($this->messageManager->get("break-shop-chest.shop-is-still-open"));
 				return;
 			}
 
 			if($shop->getOwner() !== $player->getName()){
 				$event->cancel();
-				$player->sendMessage($this->message->getNested("break-shop-chest.player-is-not-owner", "break-shop-chest.player-is-not-owner"));
+				$player->sendMessage($this->messageManager->get("break-shop-chest.player-is-not-owner"));
 				return;
 			}
 
@@ -148,17 +150,17 @@ class EventListener implements Listener{
 
 			if($shop->getOwner() !== $player->getName() and !$player->hasPermission('economy-c-shop.force-close-shop')){
 				$event->cancel();
-				$player->sendMessage($this->message->getNested("break-shop-sign.player-is-not-owner", "break-shop-sign.player-is-not-owner"));
+				$player->sendMessage($this->messageManager->get("break-shop-sign.player-is-not-owner"));
 				return;
 			}
 
 			$this->shopApplicationService->destroyShop($shop);
-			$player->sendMessage($this->message->getNested("break-shop-sign.success", "break-shop-sign.success"));
+			$player->sendMessage($this->messageManager->get("break-shop-sign.success"));
 			return;
 		}
 	}
 
-	public function onPlayerInteract(PlayerInteractEvent $event){
+	public function onPlayerInteract(PlayerInteractEvent $event) : void{
 		$block = $event->getBlock();
 		$player = $event->getPlayer();
 		if($block instanceof Chest){
@@ -170,10 +172,10 @@ class EventListener implements Listener{
 			}
 
 			$shop = $this->shopRepository->findByChest($world, $coordinate);
-
+			assert($shop instanceof Shop);
 			if($shop->getOwner() !== $player->getName()){
 				$event->cancel();
-				$player->sendMessage($this->message->getNested("open-shop-chest.player-is-not-owner", "open-shop-chest.player-is-not-owner"));
+				$player->sendMessage($this->messageManager->get("open-shop-chest.player-is-not-owner"));
 				return;
 			}
 		}
@@ -189,13 +191,13 @@ class EventListener implements Listener{
 			}
 
 			if($shop->getOwner() === $player->getName()){
-				$player->sendMessage($this->message->getNested("buy-item.player-is-owner", "buy-item.player-is-owner"));
+				$player->sendMessage($this->messageManager->get("buy-item.player-is-owner"));
 				return;
 			}
 
 			$product = $shop->getProduct();
 			if(!$player->getInventory()->canAddItem($product->getItem())){
-				$player->sendMessage($this->message->getNested("buy-item.inventory-full", "buy-item.inventory-full"));
+				$player->sendMessage($this->messageManager->get("buy-item.inventory-full"));
 				return;
 			}
 
@@ -208,18 +210,18 @@ class EventListener implements Listener{
 				$item = $product->getItem();
 				$item->setCount($item->getCount() - $remain[0]->getCount());
 				$tileChest->getInventory()->addItem($item);
-				$player->sendMessage($this->message->getNested("buy-item.chest-empty", "buy-item.chest-empty"));
+				$player->sendMessage($this->messageManager->get("buy-item.chest-empty"));
 				return;
 			}
 
 			$this->economyWrapper->transfer($player->getName(), $shop->getOwner(), $product->getPrice(), 
 				onSuccess: function() use($player, $product): void{				
 					$player->getInventory()->addItem($product->getItem());
-					$player->sendMessage($this->message->getNested("buy-item.success", "buy-item.success"));
+					$player->sendMessage($this->messageManager->get("buy-item.success"));
 				}, 
 				onFailure: function() use($tileChest, $product, $player): void{
 					$tileChest->getInventory()->addItem($product->getItem());
-					$player->sendMessage($this->message->getNested("buy-item.transaction-fail", "buy-item.transaction-fail"));
+					$player->sendMessage($this->messageManager->get("buy-item.transaction-fail"));
 					return;
 				}
 			);
@@ -229,7 +231,7 @@ class EventListener implements Listener{
 	/**
 	 * @priority MONITOR
 	 */
-	public function onChestPair(ChestPairEvent $event){
+	public function onChestPair(ChestPairEvent $event) : void{
 		foreach([[$event->getLeft(), $event->getRight()], [$event->getRight(), $event->getLeft()]] as [$chest, $pair]){
 			$position = $pair->getPosition();
 			$shop = $this->shopRepository->findByChest($position->getWorld()->getFolderName(), Coordinate::fromPosition($position));

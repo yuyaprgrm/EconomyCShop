@@ -38,6 +38,9 @@ class Coordinate implements \JsonSerializable {
 		return $this->z;
 	}
 
+	/**
+	 * @phpstan-return array{ x: int, y: int, z: int }
+	 */
 	public function jsonSerialize(): array{
 		return [
 			"x" => $this->x,

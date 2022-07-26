@@ -20,11 +20,36 @@ class JsonShopRepository implements IShopRepository {
 
 		$serializedShops = $this->jsonConfig->getAll();
 		foreach($serializedShops as $serializedShop){
+			/** @phpstan-var array{
+			 *   owner: string, 
+			 *   world: string, 
+			 *   product: array{
+			 *   item: array{id: int, damage?: int, count?: int, nbt?: string, nbt_hex?: string, nbt_b64?: string},
+			 *     price: int
+			 *   },
+			 *   sign: array{x: int, y: int, z: int},
+			 *   main-chest: array{x: int, y: int, z: int},
+			 *   sub-chest?: array{x: int, y: int, z: int}
+			 * } $serializedShop
+			 **/
 			$shop = $this->deserialize($serializedShop);
 			$this->map($shop);
 		}
 	}
 
+	/** 
+	 * @phpstan-return array{
+	 *   owner: string, 
+	 *   world: string, 
+	 *   product: array{
+	 *     item: Item,
+	 *     price: int
+	 *   },
+	 *   sign: Coordinate,
+	 *   main-chest: Coordinate,
+	 *   sub-chest?: Coordinate
+	 * }
+	 */
 	private function serialize(Shop $shop): array{
 		$serializedShop = [
 			"owner" => $shop->getOwner(),
@@ -44,11 +69,23 @@ class JsonShopRepository implements IShopRepository {
 		return $serializedShop;
 	}
 
+	/** 
+	 * @phpstan-param array{
+	 *   owner: string, 
+	 *   world: string, 
+	 *   product: array{
+	 *     item: array{id: int, damage?: int, count?: int, nbt?: string, nbt_hex?: string, nbt_b64?: string},
+	 *     price: int
+	 *   },
+	 *   sign: array{x: int, y: int, z: int},
+	 *   main-chest: array{x: int, y: int, z: int},
+	 *   sub-chest?: array{x: int, y: int, z: int}
+	 * } $serializedShop
+	 */
 	private function deserialize(array $serializedShop): Shop{
 		$subchest = null;
 		if(isset($serializedShop["sub-chest"])){
 			$subchest = new Coordinate($serializedShop["sub-chest"]["x"],$serializedShop["sub-chest"]["y"], $serializedShop["sub-chest"]["z"]);
-
 		}
 		return new Shop(
 			$serializedShop["owner"],
@@ -63,7 +100,7 @@ class JsonShopRepository implements IShopRepository {
 		);
 	}
 
-	private function map(Shop $shop){
+	private function map(Shop $shop) : void{
 		$mainChest = $shop->getMainChest();
 		$this->chestToShopMapper->set($shop->getWorld(), $mainChest->getHash(), $shop);
 
@@ -76,7 +113,7 @@ class JsonShopRepository implements IShopRepository {
 		$this->signToShopMapper->set($shop->getWorld(), $sign->getHash(), $shop);
 	}
 
-	private function unmap(Shop $shop){
+	private function unmap(Shop $shop) : void{
 		$mainChest = $shop->getMainChest();
 		$this->chestToShopMapper->remove($shop->getWorld(), $mainChest->getHash());
 

@@ -75,7 +75,7 @@ class ShopApplicationService {
 
 	}
 
-	public function destroyShop(Shop $shop){
+	public function destroyShop(Shop $shop) : void{
 		$this->shopRepository->delete($shop);
 	}
 }
