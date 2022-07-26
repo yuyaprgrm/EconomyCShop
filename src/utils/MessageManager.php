@@ -20,7 +20,7 @@ class MessageManager{
      * @phpstan-param array<int, string> $params
      */
     public function get(string $key, array $params = []) : Translatable|string{
-        $base = $this->messages[$key] ?? "";
+        $base = $this->messages[$key] ?? $key;
         if($this->clientSideTranslation){
             return new Translatable($base, $params);
         }else{

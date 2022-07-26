@@ -2,3 +2,7 @@ version: 1
 
 # [json, sqlite] - default json
 repository: json
+
+capital-option:
+  selector:
+  

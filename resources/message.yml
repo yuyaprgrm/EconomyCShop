@@ -19,4 +19,9 @@ buy-item:
   player-is-owner: You cannot buy item because you are owner.
   inventory-full: You cannot buy item because you do not have enough space in inventory.
   chest-empty: Shop chest is empty! Tell owner to supplement items.
-  transaction-fail: You have not enough money to buy product, or owner have too much money to sell.
+  transaction-fail: 
+    account-not-found: Account of you and/or shop owner is not found.
+    balance-exceeded: Owner have too much money to sell.
+    balance-insufficient: You have not enough money to buy product.
+    capital-player-offline: Owner is not in server.
+    unknown: Purchase failed for some unknown reason.
