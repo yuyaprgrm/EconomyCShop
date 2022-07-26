@@ -5,7 +5,7 @@ namespace famima65536\EconomyCShop\utils\economy;
 use Closure;
 use cooldogedev\BedrockEconomy\api\BedrockEconomyAPI;
 use cooldogedev\BedrockEconomy\query\ErrorCodes;
-use cooldogedev\libSQL\context\ClosureContext;
+use cooldogedev\BedrockEconomy\libs\cooldogedev\libSQL\context\ClosureContext;
 
 class BedrockEconomyWrapper implements EconomyWrapper {
 
