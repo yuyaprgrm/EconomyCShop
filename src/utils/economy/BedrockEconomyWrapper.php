@@ -18,7 +18,7 @@ class BedrockEconomyWrapper implements EconomyWrapper {
 				if($success){
 					$onSuccess();
 				}else{
-					$reason = match($error){
+					$reason = match(explode(":",$error)[0] ?? ""){
 						ErrorCodes::ERROR_CODE_BALANCE_INSUFFICIENT => TransactionFailureReason::BALANCE_INSUFFICIENT(),
                         ErrorCodes::ERROR_CODE_BALANCE_CAP_EXCEEDED => TransactionFailureReason::BALANCE_CAP_EXCEEDED(),
 						ErrorCodes::ERROR_CODE_ACCOUNT_NOT_FOUND => TransactionFailureReason::ACCOUNT_NOT_FOUND(),
