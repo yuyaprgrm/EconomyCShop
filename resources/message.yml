@@ -1,7 +1,7 @@
 create-shop:
   success: Chest Shop has been created.
   duplicate: There has already been a chest shop.
-  invalid-product: Price (%0) or amount (%1), or both are invalid. They should be more than zero.
+  invalid-product: Price or amount, or both are invalid. They should be more than zero.
 
 break-shop-chest:
   shop-is-still-open: You cannot break chest block because chest shop is still open.

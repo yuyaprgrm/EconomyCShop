@@ -213,7 +213,7 @@ class EventListener implements Listener{
 			$this->economyWrapper->transfer($player->getName(), $shop->getOwner(), $product->getPrice(), 
 				onSuccess: function() use($player, $product): void{				
 					$player->getInventory()->addItem($product->getItem());
-					$player->sendMessage($this->messageManager->get("buy-item.success"));
+					$player->sendMessage($this->messageManager->get("buy-item.success", [ $product->getItem()->getCustomName(), $product->getItem()->getCount(), $product->getPrice()]));
 				}, 
 				onFailure: function(TransactionFailureReason $reason) use($tileChest, $product, $player): void{
 					$key = match($reason->id()){
