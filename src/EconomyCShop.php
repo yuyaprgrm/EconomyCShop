@@ -18,6 +18,8 @@ use Webmozart\PathUtil\Path;
 
 class EconomyCShop extends PluginBase{
 
+	const CURRENT_CONFIG_VERSION = 2;
+
 	private IShopRepository $shopRepository;
 
 	public function onLoad(): void{
@@ -27,6 +29,10 @@ class EconomyCShop extends PluginBase{
 	}
 
 	public function onEnable(): void{
+		if(!$this->checkIfConfigVersionIsLatest()){
+			$this->getServer()->getPluginManager()->disablePlugin($this);
+			return;
+		};
 		$economyWrapper = $this->selectEconomyWrapper();
 		if($economyWrapper === null){
 			$this->getServer()->getPluginManager()->disablePlugin($this);
@@ -96,6 +102,14 @@ class EconomyCShop extends PluginBase{
 			'BedrockEconomy' => new BedrockEconomyWrapper(),
 			'Capital' => new CapitalWrapper($this->getServer(), $this->getConfig()->getNested('capital-option.selector'))
 		};
+	}
+
+	private function checkIfConfigVersionIsLatest() : bool{
+		if($this->getConfig()->get('version', 0) !== self::CURRENT_CONFIG_VERSION){
+			$this->getLogger()->critical('config is outdated. please move/rename/remove config.yml and regenerate one.');
+			return false;
+		}
+		return true;
 	}
 
 
